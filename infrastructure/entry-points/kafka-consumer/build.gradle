@@ -1,0 +1,10 @@
+dependencies {
+    implementation project(':model')
+    implementation project(':usecase')
+    implementation 'org.springframework:spring-context'
+
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'tools.jackson.core:jackson-databind'
+    implementation 'io.micrometer:micrometer-core'
+    implementation 'org.apache.logging.log4j:log4j-api'
+}

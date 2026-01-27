@@ -22,3 +22,14 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+adapters:
+  kafka:
+    consumer-group: "corex-auditor.consumer-group"
+    topics:
+      iseries-topic: "deposits.generalinformationupdatedv1"
+      vault-topic: "vault.api.v1.postings.posting_instruction_batch.created"
+      dlq-topic: "deposits.generalinformationupdatedv1.dlq"  #Pendiente
+aws:
+  region: "us-east-1"
+  strimzi-secret-name: "nu6410004-core-services-dev-secret-forwarder-scram-secret-operative-eda" #Pendiente
+  vault-kafka-secret-name: "nu6410004-core-services-dev-secret-vault-kafka"
