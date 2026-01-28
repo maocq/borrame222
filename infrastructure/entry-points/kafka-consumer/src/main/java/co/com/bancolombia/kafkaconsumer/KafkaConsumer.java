@@ -17,8 +17,9 @@ public class KafkaConsumer {
     private final KafkaCustomListener listener;
     private final String dlq;
 
-    public KafkaConsumer(EventsHandler eventsHandler, KafkaCustomListener listener,
-                         @Value("${adapters.kafka.topics.dlq-topic}") String dlq) {
+    public KafkaConsumer(
+            EventsHandler eventsHandler, KafkaCustomListener listener,
+            @Value("${adapters.kafka.topics.dlq-topic}") String dlq) {
         this.eventsHandler = eventsHandler;
         this.listener = listener;
         this.dlq = dlq;

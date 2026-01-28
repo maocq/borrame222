@@ -28,13 +28,14 @@ adapters:
     initial-size: 20
     max-size: 40
   kafka:
-    consumer-group: "corex-auditor.consumer-group"
+    consumer-group: "corex-recovery.consumer-group"
     topics:
       iseries-topic: "deposits.generalinformationupdatedv1"
       vault-topic: "vault.api.v1.postings.posting_instruction_batch.created"
       dlq-topic: "deposits.generalinformationupdatedv1.dlq"  #Pendiente
 account:
   filter:
+    excluded-status: "CANCELADO"
     excluded-savings-accounts: "60,61"
     excluded-checking-accounts: "18,24,41,42,43,44"
 aws:
