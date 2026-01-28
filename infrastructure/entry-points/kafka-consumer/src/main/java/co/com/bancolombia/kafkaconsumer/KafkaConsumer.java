@@ -1,6 +1,6 @@
 package co.com.bancolombia.kafkaconsumer;
 
-import co.com.bancolombia.kafkaconsumer.dtos.IseriesBalance;
+import co.com.bancolombia.kafkaconsumer.dtos.BalanceUpdateDto;
 import co.com.bancolombia.kafkaconsumer.dtos.PostingResult;
 import co.com.bancolombia.kafkaconsumer.handlers.EventsHandler;
 import co.com.bancolombia.kafkaconsumer.listener.KafkaCustomListener;
@@ -26,7 +26,7 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = "${adapters.kafka.topics.iseries-topic}", containerFactory = "factory")
     public Mono<Void> listenIseriesBalance(ConsumerRecord<String, byte[]> consumerRecord) {
-        return listener.process(consumerRecord, eventsHandler::updateIseriesBalance, IseriesBalance.class, dlq);
+        return listener.process(consumerRecord, eventsHandler::updateIseriesBalance, BalanceUpdateDto.class, dlq);
     }
 
     @KafkaListener(
