@@ -2,6 +2,7 @@ package co.com.bancolombia.config;
 
 import co.com.bancolombia.kafkaconsumer.config.KafkaConfigProperties;
 import co.com.bancolombia.kafkaconsumer.config.VaultKafkaConfigProperties;
+import co.com.bancolombia.r2dbc.config.PostgresqlConnectionProperties;
 import co.com.bancolombia.secretsmanager.api.GenericManager;
 import co.com.bancolombia.secretsmanager.connector.AWSSecretManagerConnector;
 import lombok.SneakyThrows;
@@ -29,5 +30,12 @@ public class SecretConfig {
     public VaultKafkaConfigProperties getVaultKafkaConfigProperties(
             GenericManager genericManager, @Value("${aws.vault-kafka-secret-name}") String secretName) {
         return genericManager.getSecret(secretName, VaultKafkaConfigProperties.class);
+    }
+
+    @Bean
+    @SneakyThrows
+    public PostgresqlConnectionProperties getPostgresqlConnectionProperties(
+            GenericManager genericManager, @Value("${aws.db-secret-name}") String secretName) {
+        return genericManager.getSecret(secretName, PostgresqlConnectionProperties.class);
     }
 }

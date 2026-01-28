@@ -23,6 +23,10 @@ management:
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
 adapters:
+  db:
+    schema: "public"
+    initial-size: 20
+    max-size: 40
   kafka:
     consumer-group: "corex-auditor.consumer-group"
     topics:
@@ -31,5 +35,6 @@ adapters:
       dlq-topic: "deposits.generalinformationupdatedv1.dlq"  #Pendiente
 aws:
   region: "us-east-1"
-  strimzi-secret-name: "nu6410004-core-services-dev-secret-forwarder-scram-secret-operative-eda" #Pendiente
-  vault-kafka-secret-name: "nu6410004-core-services-dev-secret-vault-kafka"
+  strimzi-secret-name: "nu6410005-recovery-dev-secret-recovery-scram-secret-operative-eda"
+  vault-kafka-secret-name: "nu6410002-query-model-corex-dev-secret-vault-kafka"
+  db-secret-name: "nu6410005-recovery-cxauddcd-dev-secretrds-admin"
