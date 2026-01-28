@@ -50,14 +50,13 @@ curl --location 'https://corenomonetario-int-dev.apps.ambientesbc.com/query-mode
 ```sql
 CREATE TABLE account_reconciliation (
     account TEXT COLLATE "C" PRIMARY KEY,
-    iseries_balance NUMERIC NOT NULL DEFAULT 0,
-    iseries_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    vault_balance NUMERIC NOT NULL DEFAULT 0,
-    vault_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    qm_balance NUMERIC NOT NULL DEFAULT 0,
-    qm_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    is_reconciled BOOLEAN NOT NULL DEFAULT FALSE,
-    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    iseries_balance NUMERIC NOT NULL,
+    iseries_datetime TIMESTAMP WITH TIME ZONE NOT NULL,
+    vault_balance NUMERIC NOT NULL,
+    vault_datetime TIMESTAMP WITH TIME ZONE NOT NULL,
+    qm_balance NUMERIC NOT NULL,
+    qm_datetime TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 -- Iseries
