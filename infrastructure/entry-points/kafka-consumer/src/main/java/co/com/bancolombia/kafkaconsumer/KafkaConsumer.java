@@ -2,6 +2,7 @@ package co.com.bancolombia.kafkaconsumer;
 
 import co.com.bancolombia.kafkaconsumer.dtos.BalanceUpdateDto;
 import co.com.bancolombia.kafkaconsumer.dtos.PostingResult;
+import co.com.bancolombia.kafkaconsumer.dtos.QmResult;
 import co.com.bancolombia.kafkaconsumer.handlers.EventsHandler;
 import co.com.bancolombia.kafkaconsumer.listener.KafkaCustomListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -34,5 +35,11 @@ public class KafkaConsumer {
             topics = "${adapters.kafka.topics.vault-topic}", containerFactory = "vaultFactory")
     public Mono<Void> listenVaultBalances(ConsumerRecord<String, byte[]> consumerRecord) {
         return listener.process(consumerRecord, eventsHandler::updateVaultBalances, PostingResult.class, dlq);
+    }
+
+    @KafkaListener(
+            topics = "${adapters.kafka.topics.qm-topic}", containerFactory = "factory")
+    public Mono<Void> listenQmBalances(ConsumerRecord<String, byte[]> consumerRecord) {
+        return listener.process(consumerRecord, eventsHandler::updateQmBalances, QmResult.class, dlq);
     }
 }

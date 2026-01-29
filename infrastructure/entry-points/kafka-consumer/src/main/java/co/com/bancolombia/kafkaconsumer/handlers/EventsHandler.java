@@ -2,6 +2,7 @@ package co.com.bancolombia.kafkaconsumer.handlers;
 
 import co.com.bancolombia.kafkaconsumer.dtos.BalanceUpdateDto;
 import co.com.bancolombia.kafkaconsumer.dtos.PostingResult;
+import co.com.bancolombia.kafkaconsumer.dtos.QmResult;
 import co.com.bancolombia.kafkaconsumer.dtos.filter.AccountFilter;
 import co.com.bancolombia.model.balance.Balance;
 import co.com.bancolombia.usecase.registercorebalance.RegisterCoreBalanceUseCase;
@@ -37,5 +38,10 @@ public class EventsHandler {
                         postingResult.insertionTimestamp(), Balance.Core.VAULT)).toList();
 
         return registerCoreBalanceUseCase.execute(balances).then();
+    }
+
+    public Mono<Void> updateQmBalances(QmResult qmResult) {
+        log.debug("Updating QM balance for {}", qmResult);
+        return registerCoreBalanceUseCase.execute(qmResult.getBalance()).then();
     }
 }

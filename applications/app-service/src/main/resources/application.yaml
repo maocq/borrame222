@@ -32,6 +32,7 @@ adapters:
     topics:
       iseries-topic: "deposits.generalinformationupdatedv1"
       vault-topic: "vault.api.v1.postings.posting_instruction_batch.created"
+      qm-topic: "depositsaccountmanagementdowntime.accountregisteredv1"
       dlq-topic: "deposits.generalinformationupdatedv1.dlq"  #Pendiente
 account:
   filter:
