@@ -15,7 +15,9 @@ import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.r2dbc.dialect.PostgresDialect;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.transaction.ReactiveTransactionManager;
 
 import java.time.Duration;
 
@@ -58,5 +60,11 @@ public class PostgreSQLConnectionPoolRead {
             @Qualifier("readPostgresOperations") ConnectionFactory connectionFactory) {
         DatabaseClient databaseClient = DatabaseClient.create(connectionFactory);
         return new R2dbcEntityTemplate(databaseClient, PostgresDialect.INSTANCE);
+    }
+
+    @Bean
+    public ReactiveTransactionManager reactiveTransactionManager(
+            @Qualifier("readPostgresOperations") ConnectionFactory connectionFactory) {
+        return new R2dbcTransactionManager(connectionFactory);
     }
 }
