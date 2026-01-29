@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 @Repository
 @RequiredArgsConstructor
 public class AccountReconciliationDataRepository implements AccountReconciliationRepository {
@@ -20,7 +22,7 @@ public class AccountReconciliationDataRepository implements AccountReconciliatio
     @Override
     @Transactional
     public Mono<ReconciliationMetrics> metrics(String id) {
-        return accountReconciliationReadDao.tryLock()
+        return accountReconciliationReadDao.tryLock(Objects.hash(id))
                 .flatMap(lock -> lock ? accountReconciliationReadDao.metrics() : Mono.empty());
     }
 
