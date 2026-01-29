@@ -1,11 +1,13 @@
 package co.com.bancolombia.kafkaconsumer.dtos;
 
+import co.com.bancolombia.model.balance.Balance;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Builder(toBuilder = true)
 public record BalanceUpdateDto(
@@ -26,6 +28,13 @@ public record BalanceUpdateDto(
     public static final String SAVING_ACCOUNT = "S";
     public static final String CHECKING_ACCOUNT = "D";
     public static final int SIZE = 11;
+    public static final String ZONE_ID = "America/Bogota";
+
+    public Balance getBalance() {
+        return new Balance(
+                getAccount(), getAmount(),
+                UPDATE_TIMESTAMP.atZone(ZoneId.of(ZONE_ID)), Balance.Core.ISERIES);
+    }
 
     public String getAccount() {
         return TIPO_CUENTA + StringUtils.leftPad(NUMERO_DE_CUENTA, SIZE, '0');

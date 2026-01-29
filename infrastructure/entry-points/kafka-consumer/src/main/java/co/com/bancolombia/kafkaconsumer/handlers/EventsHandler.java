@@ -3,27 +3,39 @@ package co.com.bancolombia.kafkaconsumer.handlers;
 import co.com.bancolombia.kafkaconsumer.dtos.BalanceUpdateDto;
 import co.com.bancolombia.kafkaconsumer.dtos.PostingResult;
 import co.com.bancolombia.kafkaconsumer.dtos.filter.AccountFilter;
+import co.com.bancolombia.model.balance.Balance;
+import co.com.bancolombia.usecase.registercorebalance.RegisterCoreBalanceUseCase;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
+@Log4j2
 @Component
 @AllArgsConstructor
 public class EventsHandler {
 
     private final AccountFilter accountFilter;
+    private final RegisterCoreBalanceUseCase registerCoreBalanceUseCase;
 
     public Mono<Void> updateIseriesBalance(BalanceUpdateDto balanceUpdateDto) {
         if (accountFilter.isInvalid(balanceUpdateDto)) {
             return Mono.empty();
         }
 
-        System.out.println("Processing IseriesBalance: " + balanceUpdateDto);
-        return Mono.empty();
+        log.debug("Updating Iseries balance for {}", balanceUpdateDto);
+        return registerCoreBalanceUseCase.execute(balanceUpdateDto.getBalance()).then();
     }
 
     public Mono<Void> updateVaultBalances(PostingResult postingResult) {
-        System.out.println("Processing PostingResult: " + postingResult);
-        return Mono.empty();
+        log.debug("Updating Vault balance for {}", postingResult);
+        List<Balance> balances = postingResult.committedBalance()
+                .stream()
+                .map(balance -> new Balance(balance.account_id(), balance.amount(),
+                        postingResult.insertionTimestamp(), Balance.Core.VAULT)).toList();
+
+        return registerCoreBalanceUseCase.execute(balances).then();
     }
 }

@@ -1,5 +1,6 @@
 package co.com.bancolombia.r2dbc.account;
 
+import co.com.bancolombia.model.balance.Balance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,21 +27,29 @@ public class AccountData {
     private ZonedDateTime qmDatetime;
     private ZonedDateTime updatedAt;
 
-    public static AccountData newIseriesBalance(String account, BigDecimal balance, ZonedDateTime dateTime) {
+    public static AccountData newBalance(Balance balance) {
+        return switch (balance.core()) {
+            case ISERIES -> newIseriesBalance(balance);
+            case VAULT -> newVaultBalance(balance);
+            case QM -> newQmBalance(balance);
+        };
+    }
+
+    private static AccountData newIseriesBalance(Balance balance) {
         var dateTimeByDefault = ZonedDateTime.now().minusYears(1);
-        return new AccountData(account, balance, dateTime, BigDecimal.ZERO,
+        return new AccountData(balance.account(), balance.balance(), balance.dateTime(), BigDecimal.ZERO,
                 dateTimeByDefault, BigDecimal.ZERO, dateTimeByDefault, ZonedDateTime.now());
     }
 
-    public static AccountData newVaultBalance(String account, BigDecimal balance, ZonedDateTime dateTime) {
+    private static AccountData newVaultBalance(Balance balance) {
         var dateTimeByDefault = ZonedDateTime.now().minusYears(1);
-        return new AccountData(account, BigDecimal.ZERO, dateTimeByDefault, balance,
-                dateTime, BigDecimal.ZERO, dateTimeByDefault, ZonedDateTime.now());
+        return new AccountData(balance.account(), BigDecimal.ZERO, dateTimeByDefault, balance.balance(),
+                balance.dateTime(), BigDecimal.ZERO, dateTimeByDefault, ZonedDateTime.now());
     }
 
-    public static AccountData newQmBalance(String account, BigDecimal balance, ZonedDateTime dateTime) {
+    private static AccountData newQmBalance(Balance balance) {
         var dateTimeByDefault = ZonedDateTime.now().minusYears(1);
-        return new AccountData(account, BigDecimal.ZERO, dateTimeByDefault, BigDecimal.ZERO,
-                dateTimeByDefault, balance, dateTime, ZonedDateTime.now());
+        return new AccountData(balance.account(), BigDecimal.ZERO, dateTimeByDefault, BigDecimal.ZERO,
+                dateTimeByDefault, balance.balance(), balance.dateTime(), ZonedDateTime.now());
     }
 }
