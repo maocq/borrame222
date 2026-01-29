@@ -19,7 +19,7 @@ public interface AccountReconciliationReadDao extends ReactiveCrudRepository<Acc
           COUNT(1) FILTER (
             WHERE vault_balance <> qm_balance
           ) AS unreconciled_total_contigency
-        FROM public.account_reconciliation;
+        FROM account_reconciliation;
         """)
     Mono<ReconciliationMetrics> metrics();
 

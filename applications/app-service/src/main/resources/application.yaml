@@ -24,7 +24,7 @@ cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
 adapters:
   db:
-    schema: "public"
+    schema: "schaudit"
     initial-size: 20
     max-size: 40
   kafka:

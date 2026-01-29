@@ -7,9 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.ZonedDateTime;
-
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 
 @Log
@@ -23,7 +20,6 @@ public class MetricsScheduler {
 
     @Scheduled(cron = "${batch.cron}")
     public void run() {
-        log.log(FINE, "📅 Metrics retrieval started at " + ZonedDateTime.now());
         accountReconciliationRepository.metrics(METRICS)
                 .doOnNext(metrics -> log.info("📊 Metrics: " + metrics))
                 .onErrorContinue((error, event) ->
