@@ -1,6 +1,6 @@
 package co.com.bancolombia.r2dbc.write.account;
 
-import co.com.bancolombia.r2dbc.account.AccountData;
+import co.com.bancolombia.r2dbc.account.AccountReconciliationData;
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-public interface AccountDataDAOWrite extends ReactiveCrudRepository<AccountData, String> {
+public interface AccountReconciliationWriteDao extends ReactiveCrudRepository<AccountReconciliationData, String> {
 
     @Query("""
         INSERT INTO account_reconciliation
@@ -18,7 +18,7 @@ public interface AccountDataDAOWrite extends ReactiveCrudRepository<AccountData,
         VALUES(:#{#data.account}, :#{#data.iseriesBalance}, :#{#data.iseriesDatetime}, :#{#data.vaultBalance}, 
                :#{#data.vaultDatetime}, :#{#data.qmBalance}, :#{#data.qmDatetime}, :#{#data.updatedAt}) RETURNING *;
         """)
-    Mono<AccountData> insert(@Param("data") AccountData data);
+    Mono<AccountReconciliationData> insert(@Param("data") AccountReconciliationData data);
 
     @Modifying
     @Query("""

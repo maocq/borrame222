@@ -1,17 +1,19 @@
 package co.com.bancolombia.kafkaconsumer.dtos;
 
+import co.com.bancolombia.model.balance.AccountBalance;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static co.com.bancolombia.model.balance.Balance.Core.QM;
+import static co.com.bancolombia.model.balance.AccountBalance.Core.QM;
 
 public record QmResult(Message Message) {
 
     public static final String BALANCE = "MSTR";
 
-    public co.com.bancolombia.model.balance.Balance getBalance() {
-        return new co.com.bancolombia.model.balance.Balance(account(), amount(), dateTime(), QM); //Pendiente
+    public AccountBalance getBalance() {
+        return new AccountBalance(account(), amount(), dateTime(), QM); //Pendiente
     }
 
     public String account() {

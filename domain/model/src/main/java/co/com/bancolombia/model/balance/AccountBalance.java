@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 @Builder(toBuilder = true)
-public record Balance(
+public record AccountBalance(
         String account,
         BigDecimal balance,
         ZonedDateTime dateTime,

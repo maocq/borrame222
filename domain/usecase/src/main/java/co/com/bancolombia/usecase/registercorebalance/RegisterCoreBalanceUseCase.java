@@ -1,7 +1,7 @@
 package co.com.bancolombia.usecase.registercorebalance;
 
-import co.com.bancolombia.model.balance.Balance;
-import co.com.bancolombia.model.balance.gateways.BalanceRepository;
+import co.com.bancolombia.model.balance.AccountBalance;
+import co.com.bancolombia.model.balance.gateways.AccountReconciliationRepository;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -11,14 +11,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RegisterCoreBalanceUseCase {
 
-    private final BalanceRepository balanceRepository;
+    private final AccountReconciliationRepository accountReconciliationRepository;
 
-    public Mono<Balance> execute(Balance balance) {
-        return balanceRepository.update(balance);
+    public Mono<AccountBalance> execute(AccountBalance balance) {
+        return accountReconciliationRepository.update(balance);
     }
 
-    public Flux<Balance> execute(List<Balance> balances) {
+    public Flux<AccountBalance> execute(List<AccountBalance> balances) {
           return Flux.fromIterable(balances)
-                .flatMap(balanceRepository::update);
+                .flatMap(accountReconciliationRepository::update);
     }
 }

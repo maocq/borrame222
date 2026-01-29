@@ -1,6 +1,6 @@
 package co.com.bancolombia.r2dbc.account;
 
-import co.com.bancolombia.model.balance.Balance;
+import co.com.bancolombia.model.balance.AccountBalance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("account_reconciliation")
-public class AccountData {
+public class AccountReconciliationData {
     @Id
     private String account;
     private BigDecimal iseriesBalance;
@@ -27,7 +27,7 @@ public class AccountData {
     private ZonedDateTime qmDatetime;
     private ZonedDateTime updatedAt;
 
-    public static AccountData newBalance(Balance balance) {
+    public static AccountReconciliationData newBalance(AccountBalance balance) {
         return switch (balance.core()) {
             case ISERIES -> newIseriesBalance(balance);
             case VAULT -> newVaultBalance(balance);
@@ -35,21 +35,21 @@ public class AccountData {
         };
     }
 
-    private static AccountData newIseriesBalance(Balance balance) {
+    private static AccountReconciliationData newIseriesBalance(AccountBalance balance) {
         var dateTimeByDefault = ZonedDateTime.now().minusYears(1);
-        return new AccountData(balance.account(), balance.balance(), balance.dateTime(), BigDecimal.ZERO,
+        return new AccountReconciliationData(balance.account(), balance.balance(), balance.dateTime(), BigDecimal.ZERO,
                 dateTimeByDefault, BigDecimal.ZERO, dateTimeByDefault, ZonedDateTime.now());
     }
 
-    private static AccountData newVaultBalance(Balance balance) {
+    private static AccountReconciliationData newVaultBalance(AccountBalance balance) {
         var dateTimeByDefault = ZonedDateTime.now().minusYears(1);
-        return new AccountData(balance.account(), BigDecimal.ZERO, dateTimeByDefault, balance.balance(),
+        return new AccountReconciliationData(balance.account(), BigDecimal.ZERO, dateTimeByDefault, balance.balance(),
                 balance.dateTime(), BigDecimal.ZERO, dateTimeByDefault, ZonedDateTime.now());
     }
 
-    private static AccountData newQmBalance(Balance balance) {
+    private static AccountReconciliationData newQmBalance(AccountBalance balance) {
         var dateTimeByDefault = ZonedDateTime.now().minusYears(1);
-        return new AccountData(balance.account(), BigDecimal.ZERO, dateTimeByDefault, BigDecimal.ZERO,
+        return new AccountReconciliationData(balance.account(), BigDecimal.ZERO, dateTimeByDefault, BigDecimal.ZERO,
                 dateTimeByDefault, balance.balance(), balance.dateTime(), ZonedDateTime.now());
     }
 }

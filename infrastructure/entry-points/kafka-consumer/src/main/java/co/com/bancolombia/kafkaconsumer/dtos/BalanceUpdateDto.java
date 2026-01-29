@@ -1,6 +1,6 @@
 package co.com.bancolombia.kafkaconsumer.dtos;
 
-import co.com.bancolombia.model.balance.Balance;
+import co.com.bancolombia.model.balance.AccountBalance;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
@@ -30,10 +30,10 @@ public record BalanceUpdateDto(
     public static final int SIZE = 11;
     public static final String ZONE_ID = "America/Bogota";
 
-    public Balance getBalance() {
-        return new Balance(
+    public AccountBalance getBalance() {
+        return new AccountBalance(
                 getAccount(), getAmount(),
-                UPDATE_TIMESTAMP.atZone(ZoneId.of(ZONE_ID)), Balance.Core.ISERIES);
+                UPDATE_TIMESTAMP.atZone(ZoneId.of(ZONE_ID)), AccountBalance.Core.ISERIES);
     }
 
     public String getAccount() {

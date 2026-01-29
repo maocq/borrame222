@@ -4,7 +4,7 @@ import co.com.bancolombia.kafkaconsumer.dtos.BalanceUpdateDto;
 import co.com.bancolombia.kafkaconsumer.dtos.PostingResult;
 import co.com.bancolombia.kafkaconsumer.dtos.QmResult;
 import co.com.bancolombia.kafkaconsumer.dtos.filter.AccountFilter;
-import co.com.bancolombia.model.balance.Balance;
+import co.com.bancolombia.model.balance.AccountBalance;
 import co.com.bancolombia.usecase.registercorebalance.RegisterCoreBalanceUseCase;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,10 +32,10 @@ public class EventsHandler {
 
     public Mono<Void> updateVaultBalances(PostingResult postingResult) {
         log.debug("Updating Vault balance for {}", postingResult);
-        List<Balance> balances = postingResult.committedBalance()
+        List<AccountBalance> balances = postingResult.committedBalance()
                 .stream()
-                .map(balance -> new Balance(balance.account_id(), balance.amount(),
-                        postingResult.insertionTimestamp(), Balance.Core.VAULT)).toList();
+                .map(balance -> new AccountBalance(balance.account_id(), balance.amount(),
+                        postingResult.insertionTimestamp(), AccountBalance.Core.VAULT)).toList();
 
         return registerCoreBalanceUseCase.execute(balances).then();
     }
