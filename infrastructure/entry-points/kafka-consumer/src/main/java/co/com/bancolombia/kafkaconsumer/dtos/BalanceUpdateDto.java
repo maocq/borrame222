@@ -1,6 +1,7 @@
 package co.com.bancolombia.kafkaconsumer.dtos;
 
 import co.com.bancolombia.model.balance.AccountBalance;
+import co.com.bancolombia.model.validation.ValidationService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Objects;
+
+import static co.com.bancolombia.model.validation.ValidationService.validate;
 
 @Builder(toBuilder = true)
 public record BalanceUpdateDto(
@@ -43,5 +47,20 @@ public record BalanceUpdateDto(
     public BigDecimal getAmount() {
         var balance = RSLDEFE.subtract(RSLDCXC).subtract(VALOR_EMBARGADO);
         return TIPO_CUENTA.equals(CHECKING_ACCOUNT) ? balance.subtract(RSLDBLS) : balance;
+    }
+
+    public BalanceUpdateDto {
+        validate(id, ValidationService::isBlankString, "Invalid id");
+        validate(TIPO_CUENTA, ValidationService::isBlankString, "Invalid TIPO_CUENTA");
+        validate(NUMERO_DE_CUENTA, ValidationService::isBlankString, "Invalid NUMERO_DE_CUENTA");
+        validate(RSLDEFE, Objects::isNull, "RSLDEFE cannot be null");
+        validate(RSLDCXC, Objects::isNull, "RSLDCXC cannot be null");
+        validate(VALOR_EMBARGADO, Objects::isNull, "VALOR_EMBARGADO cannot be null");
+        validate(RSLDBLS, Objects::isNull, "RSLDBLS cannot be null");
+        validate(NOMBRE_ESTADO, ValidationService::isBlankString, "Invalid NOMBRE_ESTADO");
+        validate(CODIGO_PLAN, ValidationService::isBlankString, "Invalid CODIGO_PLAN");
+        validate(RELACION_CLIENTE_CUENTA, ValidationService::isBlankString, "Invalid RELACION_CLIENTE_CUENTA");
+        validate(FLAGS_CUENTA, ValidationService::isBlankString, "Invalid FLAGS_CUENTA");
+        validate(UPDATE_TIMESTAMP, Objects::isNull, "UPDATE_TIMESTAMP cannot be null");
     }
 }
