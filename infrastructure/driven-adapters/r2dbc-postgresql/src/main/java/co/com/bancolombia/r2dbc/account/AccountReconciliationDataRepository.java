@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 public class AccountReconciliationDataRepository implements AccountReconciliationRepository {
 
     private final AccountReconciliationWriteDao accountReconciliationWriteDao;
-    //private final AccountDataDAORead accountDataDAORead; Pendiente - Borrar
 
 
     @Override
@@ -40,7 +39,7 @@ public class AccountReconciliationDataRepository implements AccountReconciliatio
                 .flatMap(rowsUpdated -> insertIfNotExist(rowsUpdated, balance));
     }
 
-    private Mono<AccountBalance> insertIfNotExist(Long rowsUpdated, AccountBalance balance) {
+    private Mono<AccountBalance> insertIfNotExist(long rowsUpdated, AccountBalance balance) {
         if (rowsUpdated > 0) {
             return Mono.just(balance);
         }
