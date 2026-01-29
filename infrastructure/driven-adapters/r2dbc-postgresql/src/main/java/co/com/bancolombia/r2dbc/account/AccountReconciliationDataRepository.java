@@ -13,7 +13,6 @@ public class AccountReconciliationDataRepository implements AccountReconciliatio
 
     private final AccountReconciliationWriteDao accountReconciliationWriteDao;
 
-
     @Override
     public Mono<AccountBalance> update(AccountBalance balance) {
         return switch (balance.core()) {
@@ -26,26 +25,40 @@ public class AccountReconciliationDataRepository implements AccountReconciliatio
 
     private Mono<AccountBalance> updateIseries(AccountBalance balance) {
         return accountReconciliationWriteDao.updateIseries(balance.account(), balance.balance(), balance.dateTime())
-                .flatMap(rowsUpdated -> insertIfNotExist(rowsUpdated, balance));
+                .flatMap(rowsUpdated -> {
+                    if (rowsUpdated > 0) {
+                        return Mono.just(balance);
+                    }
+                    return accountReconciliationWriteDao.findById(balance.account())
+                            .switchIfEmpty(Mono.defer(() -> accountReconciliationWriteDao
+                                    .insertIseries(AccountReconciliationData.newBalance(balance))))
+                            .map(accountReconciliationData ->  balance);
+                });
     }
 
     private Mono<AccountBalance> updateVault(AccountBalance balance) {
         return accountReconciliationWriteDao.updateVault(balance.account(), balance.balance(), balance.dateTime())
-                .flatMap(rowsUpdated -> insertIfNotExist(rowsUpdated, balance));
+                .flatMap(rowsUpdated -> {
+                    if (rowsUpdated > 0) {
+                        return Mono.just(balance);
+                    }
+                    return accountReconciliationWriteDao.findById(balance.account())
+                            .switchIfEmpty(Mono.defer(() -> accountReconciliationWriteDao
+                                    .insertVault(AccountReconciliationData.newBalance(balance))))
+                            .map(accountReconciliationData ->  balance);
+                });
     }
 
     private Mono<AccountBalance> updateQm(AccountBalance balance) {
         return accountReconciliationWriteDao.updateQm(balance.account(), balance.balance(), balance.dateTime())
-                .flatMap(rowsUpdated -> insertIfNotExist(rowsUpdated, balance));
-    }
-
-    private Mono<AccountBalance> insertIfNotExist(long rowsUpdated, AccountBalance balance) {
-        if (rowsUpdated > 0) {
-            return Mono.just(balance);
-        }
-
-        return accountReconciliationWriteDao.findById(balance.account())
-                .switchIfEmpty(Mono.defer(() -> accountReconciliationWriteDao.insert(AccountReconciliationData.newBalance(balance))))
-                .map(accountReconciliationData ->  balance);
+                .flatMap(rowsUpdated -> {
+                    if (rowsUpdated > 0) {
+                        return Mono.just(balance);
+                    }
+                    return accountReconciliationWriteDao.findById(balance.account())
+                            .switchIfEmpty(Mono.defer(() -> accountReconciliationWriteDao
+                                    .insertQm(AccountReconciliationData.newBalance(balance))))
+                            .map(accountReconciliationData ->  balance);
+                });
     }
 }
