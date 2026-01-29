@@ -2,9 +2,12 @@ package co.com.bancolombia.r2dbc.account;
 
 import co.com.bancolombia.model.balance.AccountBalance;
 import co.com.bancolombia.model.balance.gateways.AccountReconciliationRepository;
+import co.com.bancolombia.model.reconciliationmetrics.ReconciliationMetrics;
+import co.com.bancolombia.r2dbc.read.account.AccountReconciliationReadDao;
 import co.com.bancolombia.r2dbc.write.account.AccountReconciliationWriteDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -12,6 +15,14 @@ import reactor.core.publisher.Mono;
 public class AccountReconciliationDataRepository implements AccountReconciliationRepository {
 
     private final AccountReconciliationWriteDao accountReconciliationWriteDao;
+    private final AccountReconciliationReadDao accountReconciliationReadDao;
+
+    @Override
+    @Transactional
+    public Mono<ReconciliationMetrics> metrics(String id) {
+        return accountReconciliationReadDao.tryLock()
+                .flatMap(lock -> lock ? accountReconciliationReadDao.metrics() : Mono.empty());
+    }
 
     @Override
     public Mono<AccountBalance> update(AccountBalance balance) {

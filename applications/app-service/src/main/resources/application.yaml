@@ -44,6 +44,8 @@ aws:
   strimzi-secret-name: "nu6410005-recovery-dev-secret-recovery-scram-secret-operative-eda"
   vault-kafka-secret-name: "nu6410002-query-model-corex-dev-secret-vault-kafka"
   db-secret-name: "nu6410005-recovery-cxauddcd-dev-secretrds-admin"
+batch:
+  cron: "0 */1 * * * *"
 logging:
   level:
     root: INFO
